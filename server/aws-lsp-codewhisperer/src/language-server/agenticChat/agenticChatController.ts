@@ -461,7 +461,7 @@ export class AgenticChatController implements ChatHandlers {
                     codeReference: result.data.chatResult.codeReference,
                     relatedContent:
                         result.data.chatResult.relatedContent?.content &&
-                        result.data.chatResult.relatedContent.content.length > 0
+                            result.data.chatResult.relatedContent.content.length > 0
                             ? result.data?.chatResult.relatedContent
                             : undefined,
                     toolUses: Object.keys(result.data?.toolUses!).map(k => ({
@@ -609,7 +609,7 @@ export class AgenticChatController implements ChatHandlers {
                 }
 
                 // show thinking spinner when tool is running
-                loadingMessageId = `loading-${toolUse.toolUseId}`
+                const loadingMessageId = `loading-${toolUse.toolUseId}`
                 await chatResultStream.writeResultBlock({ messageId: loadingMessageId })
                 this.#features.chat.sendChatUpdate({ tabId, state: { inProgress: true } })
 
@@ -757,17 +757,17 @@ export class AgenticChatController implements ChatHandlers {
             case 'executeBash':
                 buttons = requiresAcceptance
                     ? [
-                          {
-                              id: 'reject-shell-command',
-                              text: 'Reject',
-                              icon: 'cancel',
-                          },
-                          {
-                              id: 'run-shell-command',
-                              text: 'Run',
-                              icon: 'play',
-                          },
-                      ]
+                        {
+                            id: 'reject-shell-command',
+                            text: 'Reject',
+                            icon: 'cancel',
+                        },
+                        {
+                            id: 'run-shell-command',
+                            text: 'Run',
+                            icon: 'play',
+                        },
+                    ]
                     : []
                 header = {
                     body: 'shell',
@@ -1084,9 +1084,9 @@ export class AgenticChatController implements ChatHandlers {
 
             return result.success
                 ? {
-                      ...result.data.chatResult,
-                      requestId: response.$metadata.requestId,
-                  }
+                    ...result.data.chatResult,
+                    requestId: response.$metadata.requestId,
+                }
                 : new ResponseError<ChatResult>(LSPErrorCodes.RequestFailed, result.error)
         } catch (err) {
             this.#log(

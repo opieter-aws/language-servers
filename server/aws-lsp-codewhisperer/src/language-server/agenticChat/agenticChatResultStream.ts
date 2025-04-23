@@ -101,16 +101,16 @@ export class AgenticChatResultStream {
                                     : am.body,
                             ...(am.messageId === c.messageId &&
                                 (c.contextList || acc.contextList) && {
-                                    contextList: {
-                                        filePaths: [
-                                            ...(acc.contextList?.filePaths ?? []),
-                                            ...(c.contextList?.filePaths ?? []),
-                                        ],
-                                        rootFolderTitle: c.contextList?.rootFolderTitle
-                                            ? c.contextList.rootFolderTitle
-                                            : (acc.contextList?.rootFolderTitle ?? ''),
-                                    },
-                                }),
+                                contextList: {
+                                    filePaths: [
+                                        ...(acc.contextList?.filePaths ?? []),
+                                        ...(c.contextList?.filePaths ?? []),
+                                    ],
+                                    rootFolderTitle: c.contextList?.rootFolderTitle
+                                        ? c.contextList.rootFolderTitle
+                                        : (acc.contextList?.rootFolderTitle ?? ''),
+                                },
+                            }),
                             header: c.header ? { ...c.header } : { ...am.header },
                         })),
                     }
@@ -137,8 +137,7 @@ export class AgenticChatResultStream {
 
     /**
      * Overwrites a specific blockId and re-sends the resulting blocks to the client.
-     * @param result
-     * @param blockId
+     * @param messageId
      */
     async overwriteResultBlock(result: ChatMessage, blockId: number) {
         this.#state.chatResultBlocks[blockId] = result
@@ -147,10 +146,12 @@ export class AgenticChatResultStream {
 
     /**
      * Removes a specific messageId and re-sends the result to the client.
-     * @param messageId
+     * @param result
+     * @param blockId
      */
     async removeResultBlock(messageId: string) {
         this.#state.chatResultBlocks = this.#state.chatResultBlocks.filter(block => block.messageId !== messageId)
+        await this.#sendProgress(this.getResult(messageId))
     }
 
     getResultStreamWriter(): ResultStreamWriter {
